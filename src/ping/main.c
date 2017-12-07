@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/05 15:35:26 by alex              #+#    #+#             */
-/*   Updated: 2017/12/07 01:39:16 by alex             ###   ########.fr       */
+/*   Updated: 2017/12/07 07:53:43 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ int	rcv_sock(int sock, char *address)
 				// 			printf("iph->ip_off : %d - iph->ip_ttl : %d - iph->ip_p : %d - iph->ip_sum : %d\n -	iph->ip_tos : %d",
 				// 			iph->ip_off, iph->ip_ttl, iph->ip_p, iph->ip_sum, iph->ip_tos);
 
-				struct icmphdr *pkt = (struct icmphdr *) ((void *)msg.msg_iov[0].iov_base + sizeof (struct ip));
+				struct icmp *pkt = (struct icmp *) ((void *)msg.msg_iov[0].iov_base + sizeof (struct ip));
 				// printf("pkt->type: %d - pkt->code: %d - pkt->checksum: %d - pkt->un.echo.id: %d - pkt->un.echo.sequence:%d\n",
 				// pkt->type, pkt->code, pkt->checksum, pkt->un.echo.id, pkt->un.echo.sequence);
 
@@ -176,7 +176,7 @@ int	rcv_sock(int sock, char *address)
 				exit (EXIT_FAILLURE);
 			}
 
-			printf("%zd bytes from %s: icmp_seq=%d ttl=%d time=%f ms\n", bytes_rcv, address, pkt->un.echo.sequence, iph->ip_ttl, (t_time_now.tv_usec - t_time->tv_usec) * 0.001);
+			printf("%zd bytes from %s: icmp_seq=%d ttl=%d time=%f ms\n", bytes_rcv, address, pkt->icmp_hun.ih_idseq.icd_seq, iph->ip_ttl, (t_time_now.tv_usec - t_time->tv_usec) * 0.001);
 			// printf("--------------------2--------------------time->tv_sec: %ld - time->tv_usec: %ld\n", t_time->tv_sec, t_time->tv_usec);
 
 
@@ -233,52 +233,58 @@ csum (unsigned short *buf, int nwords)
   return ~sum;
 }
 
-int	ping(char *addr_s, char *port, int sock)
-{
-	struct sockaddr_in	addrDest;
-	struct sockaddr_in	addrLocal;
-	struct icmphdr		icmp;
-	char				*msg = ft_strdup("Hello World");
-	char buf[256];
-
-	addrDest.sin_family = AF_INET;
-	addrDest.sin_port = htons(8888);
-	addrDest.sin_addr.s_addr = inet_addr(addr_s);
-
-
-	icmp.type = 8;
-	icmp.type = 0;
-	icmp.checksum = 0;
-	icmp.un.echo.id = 1;
-	icmp.un.echo.sequence = 1;
-
-
-	const size_t req_size=8;
-	struct icmphdr req;
-	req.type=8;
-	req.code=0;
-	req.checksum=0;
-	req.un.echo.id=htons(rand());
-	req.un.echo.sequence=htons(1);
-	req.checksum=ip_checksum(&req,req_size);
-
-	memcpy(buf, &req, sizeof(req));
-	// strlen(msg)+1 for terminating null char
-	int result = sendto(sock, buf, 256, 0, (struct sockaddr*)&addrDest, sizeof(addrDest));
-	if (result == -1)
-	{
-		printf("Oh dear, something went wrong with sendto()! %s\n", strerror(errno));
-		printf("%s\n", "ERROR: sendto");
-		exit(EXIT_FAILLURE);
-	}
-	// printf("sentdo: %d\n", result);
-	return (EXIT_SUCCESS);
-}
+// int	ping(char *addr_s, char *port, int sock)
+// {
+// 	struct sockaddr_in	addrDest;
+// 	struct sockaddr_in	addrLocal;
+// 	struct icmp		icmp;
+// 	char				*msg = ft_strdup("Hello World");
+// 	char buf[256];
+//
+// 	addrDest.sin_family = AF_INET;
+// 	addrDest.sin_port = htons(8888);
+// 	addrDest.sin_addr.s_addr = inet_addr(addr_s);
+//
+//
+// 	icmp.type = 8;
+// 	icmp.type = 0;
+// 	icmp.checksum = 0;
+// 	icmp.un.echo.id = 1;
+// 	icmp.un.echo.sequence = 1;
+//
+//
+// 	const size_t req_size=8;
+// 	struct icmp req;
+// 	req.type=8;
+// 	req.code=0;
+// 	req.checksum=0;
+// 	req.un.echo.id=htons(rand());
+// 	req.un.echo.sequence=htons(1);
+// 	req.checksum=ip_checksum(&req,req_size);
+//
+// 	memcpy(buf, &req, sizeof(req));
+// 	// strlen(msg)+1 for terminating null char
+// 	int result = sendto(sock, buf, 256, 0, (struct sockaddr*)&addrDest, sizeof(addrDest));
+// 	if (result == -1)
+// 	{
+// 		printf("Oh dear, something went wrong with sendto()! %s\n", strerror(errno));
+// 		printf("%s\n", "ERROR: sendto");
+// 		exit(EXIT_FAILLURE);
+// 	}
+// 	// printf("sentdo: %d\n", result);
+// 	return (EXIT_SUCCESS);
+// }
 
 
 int
 main (int ac, char **av)
 {
+	struct sockaddr	*dst;
+	char				str[INET6_ADDRSTRLEN];
+	// char *addresse
+
+	dst = set_addr_dst(av[1], str);
+
 	int pid = getpid();
   int s = socket (PF_INET, SOCK_RAW, IPPROTO_ICMP);	/* open raw socket */
 // inet_pton(AF_INET, addr, serveraddr);
@@ -286,15 +292,6 @@ main (int ac, char **av)
 	printf("IPPROTO_ICMP:%d\n", IPPROTO_ICMP);
     struct sockaddr_in sin;
 
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons (P);/* you byte-order >1byte header values to network
-    			  byte order (not needed on big endian machines) */
-    // sin.sin_addr.s_addr = inet_addr (av[1]);
-	if (inet_pton(AF_INET, av[1], &sin.sin_addr.s_addr) != 1)
-	{
-		printf("%s\n", "ERROR: inet_pton");
-		exit (EXIT_FAILLURE);
-	}
 	int seq = 0;
 	int send = 0;
 	while (1)
@@ -313,9 +310,9 @@ main (int ac, char **av)
 			   that to write the header values into it */
   struct ip *iph = (struct ip *) datagram;
 
-	// printf("struct ip : %zu, icmphdr: %zu, timeval: %zu\n", sizeof(struct ip), sizeof(struct icmphdr), sizeof(struct timeval));
+	// printf("struct ip : %zu, icmp: %zu, timeval: %zu\n", sizeof(struct ip), sizeof(struct icmp), sizeof(struct timeval));
 
-	struct timeval *t_time =  (struct timeval *)((void *)datagram + sizeof (struct ip) + sizeof(struct icmphdr));
+	struct timeval *t_time =  (struct timeval *)((void *)datagram + sizeof (struct ip) + sizeof(struct icmp));
 
 	if (gettimeofday(t_time, NULL))
 	{
@@ -324,13 +321,21 @@ main (int ac, char **av)
 	}
 	// printf("---------------------time->tv_sec: %ld - time->tv_usec: %ld\n", t_time->tv_sec, t_time->tv_usec);
 
-  struct icmphdr *pkt = (struct icmphdr *) ((void *)datagram + sizeof (struct ip));
-                pkt->type = ICMP_ECHO;
-                pkt->code = 0;
-                pkt->checksum = 0;
-                pkt->un.echo.id = htons(pid & 0xFFFF);
-                pkt->un.echo.sequence = seq++;
-                pkt->checksum = csum ((unsigned short *) pkt, sizeof(*pkt) >> 1);
+  struct icmp *pkt = (struct icmp *) ((void *)datagram + sizeof (struct ip));
+  pkt->icmp_type = ICMP_ECHO;
+  	pkt->icmp_code = 0;
+  	pkt->icmp_hun.ih_idseq.icd_id = htons(pid & 0xFFFF);
+  	pkt->icmp_hun.ih_idseq.icd_seq = seq++;
+  	pkt->icmp_cksum = csum ((unsigned short *) pkt, sizeof(*pkt) >> 1);
+
+
+
+				// pkt->type = ICMP_ECHO;
+                // pkt->code = 0;
+                // pkt->checksum = 0;
+                // pkt->un.echo.id = htons(pid & 0xFFFF);
+                // pkt->un.echo.sequence = seq++;
+                // pkt->checksum = csum ((unsigned short *) pkt, sizeof(*pkt) >> 1);
 
 /* we'll now fill in the ip header values, see above for explanations */
   iph->ip_hl = 5;
@@ -343,9 +348,27 @@ main (int ac, char **av)
   iph->ip_p = IPPROTO_ICMP;
   iph->ip_sum = 0;		/* set it to 0 before computing the actual checksum later */
 
-  iph->ip_src.s_addr = inet_addr ("0.0.0.0");/* SYN's can be blindly spoofed */
+
+  // inet_aton("127.0.0.1", &iph->ip_src);/* SYN's can be blindly spoofed */
+  // inet_aton(str, &iph->ip_dst);/* SYN's can be blindly spoofed */
+  printf("STR:: %s\n", str);
+
+  if (inet_pton(AF_INET, "127.0.0.1", &(iph->ip_src.s_addr)) <= 0)
+  {
+	  printf("%s\n", "ERROR: inet_pton 1");
+	  printf("Oh dear, something went wrong with sendto()! %s\n", strerror(errno));
+	  exit (EXIT_FAILLURE);
+  }
+  if (inet_pton(AF_INET, str, &(iph->ip_dst.s_addr)) <= 0)
+  {
+	  printf("%s\n", "ERROR: inet_pton 2");
+	  printf("Oh dear, something went wrong with sendto()! %s\n", strerror(errno));
+	  exit (EXIT_FAILLURE);
+  }
+	// iph->ip_dst = ((struct sockaddr_in *)dst)->sin_addr;
+  // inet_pton(AF_INET, str, &iph->ip_dst);/* SYN's can be blindly spoofed */
   // iph->ip_src.s_addr = inet_addr ("127.0.0.1");/* SYN's can be blindly spoofed */
-  iph->ip_dst.s_addr = sin.sin_addr.s_addr;
+  // iph->ip_dst = ((struct sockaddr_in *)dst)->sin_addr;
   // iph->ip_sum = csum ((unsigned short *) datagram, iph->ip_len >> 1);
 
 
@@ -354,8 +377,8 @@ main (int ac, char **av)
 		  datagram,	/* the buffer containing headers and data */
 		  64,	/* total length of our datagram */
 		  0,		/* routing flags, normally always 0 */
-		  (struct sockaddr *) &sin,	/* socket addr, just like in */
-		  sizeof (sin))) < 0)		/* a normal send() */
+		  dst,	/* socket addr, just like in */
+		  sizeof (*dst))) < 0)		/* a normal send() */
 		  {
 
 			  printf ("error\n");

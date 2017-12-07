@@ -6,7 +6,7 @@
 #    By: aollivie <aollivie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/14 17:07:06 by aollivie          #+#    #+#              #
-#    Updated: 2017/12/05 15:34:39 by alex             ###   ########.fr        #
+#    Updated: 2017/12/07 05:24:33 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ O_DIR= obj
 
 MKDIR = mkdir
 #
-PING_SRC = create_client.c main.c
+PING_SRC = create_client.c main.c get_addr.c
 # CLIENT_FTP_SRC = requete.c builtin_requete.c
 #
 # CLIENT_SRC= create_client.c start_client.c

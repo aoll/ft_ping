@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/14 05:07:02 by alex              #+#    #+#             */
-/*   Updated: 2017/12/05 16:23:02 by alex             ###   ########.fr       */
+/*   Updated: 2017/12/07 07:17:37 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "ft_p.h"
 #include "ft_irc.h"
 
+struct sockaddr	*set_addr_dst(char *address, char *str);
 int				start_client(char *addr, char *port);
 int				create_client(char *addr, char *port, char *protocole);
 struct addrinfo	*get_addrinfo(char *addr, char *port);

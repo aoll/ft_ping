@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/25 17:35:48 by alex              #+#    #+#             */
-/*   Updated: 2017/12/07 01:05:43 by alex             ###   ########.fr       */
+/*   Updated: 2017/12/07 06:20:26 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ static void			init_addrinfo(
 {
 	int rc;
 
-	hints->ai_flags = AI_NUMERICSERV;
+	// hints->ai_flags = AI_NUMERICSERV;
 	hints->ai_family = AF_INET;
+	// hints->ai_socktype = SOCK_STREAM;
+	// hints->ai_protocol = IPPROTO_ICMP;
 	hints->ai_socktype = SOCK_DGRAM;
 	rc = inet_pton(AF_INET, addr, serveraddr);
 	if (rc == 1)
@@ -33,7 +35,7 @@ static void			init_addrinfo(
 		if (rc == 1)
 		{
 			hints->ai_family = AF_INET6;
-			hints->ai_flags |= AI_NUMERICHOST;
+			// hints->ai_flags |= AI_NUMERICHOST;
 		}
 	}
 	return;
@@ -60,7 +62,7 @@ struct addrinfo	*get_addrinfo(char *addr, char *port)
 		return (NULL);
 	ft_memset(hints, 0, sizeof(*hints));
 	init_addrinfo(addr, hints, &serveraddr);
-	rc = getaddrinfo(addr, port, hints, &res);
+	rc = getaddrinfo(addr, 0, hints, &res);
 	free(hints);
 	if (rc != 0)
 	{
@@ -105,7 +107,7 @@ int	create_client(char *addr, char *port, char *protocole)
 	}
 
 	// ret = con_socket(sock, res);
-	// free_res(res);
+	free_res(res);
 	// if (!ret)
 		// return (sock);
 	close(sock);
