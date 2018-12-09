@@ -6,7 +6,7 @@
 #    By: aollivie <aollivie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/14 17:07:06 by aollivie          #+#    #+#              #
-#    Updated: 2017/12/07 05:24:33 by alex             ###   ########.fr        #
+#    Updated: 2018/12/09 23:23:12 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,13 @@ endif
 
 NAME_PING = ft_ping
 
-NAME_CLIENT = client
+# NAME_CLIENT = client
 
 LIBFT =libft/libft.a
 
 
 
-I_DIR= -I inc/ -I inc/irc -I inc/server -I inc/client -I libft/inc
+I_DIR= -I inc/  -I libft/inc
 
 ifeq ($(LANG),fr)
 	I_DIR= -I inc/ -I./libft/inc
@@ -38,7 +38,8 @@ O_DIR= obj
 
 MKDIR = mkdir
 #
-PING_SRC = create_client.c main.c get_addr.c
+NEW_SRC = main.c packet.c
+# PING_SRC = create_client.c main.c get_addr.c
 # CLIENT_FTP_SRC = requete.c builtin_requete.c
 #
 # CLIENT_SRC= create_client.c start_client.c
@@ -62,9 +63,11 @@ PING_SRC = create_client.c main.c get_addr.c
 # C_SRC =
 # C_IRC = buffer_circulaire.c chanel.c create_server.c process.c tool.c
 
-VPATH= .:src:src/ping
+# VPATH= .:src:src/ping
+VPATH= .:src:src/new
 
-OBJS= $(PING_SRC:%.c=$(O_DIR)/%.o)
+# OBJS= $(PING_SRC:%.c=$(O_DIR)/%.o)
+OBJS= $(NEW_SRC:%.c=$(O_DIR)/%.o)
 
 .PHONY : all clean fclean re
 
