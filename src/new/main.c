@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/07 16:58:49 by alex              #+#    #+#             */
-/*   Updated: 2018/12/09 23:27:00 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/10 01:30:36 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	loop(t_env *e)
 		}
 	}
 	close(e->socket);
-	printf("\n%s\n", "FINISH");
+	printf("\n--- %s ft_ping statistics ---\n", e->adr);
 	return (EXIT_SUCCESS);
 }
 

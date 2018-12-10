@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 23:21:08 by alex              #+#    #+#             */
-/*   Updated: 2018/12/09 23:24:13 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/10 01:23:48 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ int	read_packet(t_env *e)
 			 printf("%s\n", "ERROR: gettimeofday" );
 			 exit (EXIT_FAILURE);
 		 }
-		 float t = (t_time.tv_usec - t_time2->tv_usec) * 0.001;
+
+		 float t = ((1000000*t_time.tv_sec + t_time.tv_usec) - (1000000*t_time2->tv_sec + t_time2->tv_usec)) * 0.001;
 		 int it = t;
 		 float tt = it;
 		 float r = t - it;
