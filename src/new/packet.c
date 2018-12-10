@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 23:21:08 by alex              #+#    #+#             */
-/*   Updated: 2018/12/10 01:23:48 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/10 03:53:56 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,37 +28,34 @@ static unsigned short			checksum(unsigned short *buffer, int size)
 	return (unsigned short)(~cksum);
 }
 
+
+
+int	init_packet(t_env *e)
+{
+	ft_memset (&e->pck, 0, PACKETSIZE);
+	e->pck.hdr.type             = ICMP_ECHO;
+	e->pck.hdr.code             = 0;
+	e->pck.hdr.un.echo.id       = e->pid;
+	ft_memcpy(e->pck.data, MY_DATA, ft_strlen(MY_DATA));
+	return (EXIT_SUCCESS);
+}
+
 int	send_packet(t_env *e)
 {
-	char datagram[PACKETSIZE];
 	ssize_t sent_bytes;
-	struct icmphdr *hdr = (struct icmphdr *)((void *)datagram);
-	struct timeval *t_time =  (struct timeval *)((void *)datagram + sizeof(struct icmphdr));
 
-	memset (datagram, 0, PACKETSIZE);
-	hdr->type             = ICMP_ECHO;
-	hdr->code             = 0;
-	hdr->checksum         = 0;
-	hdr->un.echo.id       = e->pid;
-	hdr->un.echo.sequence = e->seq;
-	if (gettimeofday(t_time, NULL))
-	{
-		printf("%s\n", "ERROR: interne: gettimeofday" );
-		exit (EXIT_FAILURE);
-	}
-	ft_memcpy(datagram + (sizeof(struct icmphdr) + sizeof(struct timeval)), MY_DATA, ft_strlen(MY_DATA));
-	hdr->checksum         = checksum((unsigned short *)datagram, PACKETSIZE);
-	sent_bytes = sendto(e->socket, hdr, PACKETSIZE, 0,
+	gettimeofday(&e->pck.t_time, NULL);
+	e->pck.hdr.checksum = 0;
+	e->pck.hdr.un.echo.sequence = e->seq;
+	e->pck.hdr.checksum = checksum((unsigned short *)&e->pck, PACKETSIZE);
+	sent_bytes = sendto(e->socket, &e->pck.hdr, PACKETSIZE, 0,
 		  (struct sockaddr *)e->ad_dst, sizeof(struct sockaddr));
 	if (sent_bytes != PACKETSIZE)
 	{
-		printf("%s%d\n", "ERROR: interne: during send packet seq", e->seq);
-		exit(EXIT_FAILURE);
+		printf("%s\n", "ft_ping: sendto: Network is unreachable");
 	}
-	else
-	{
-		e->nb_packet_send++;
-	}
+	e->nb_packet_send++;
+	e->seq++;
 	return (EXIT_SUCCESS);
 }
 
@@ -69,9 +66,9 @@ int	read_packet(t_env *e)
 
 
     int bytes;
-    unsigned int len = sizeof(addr);
+    unsigned int len = sizeof(struct sockaddr_in);
 
-     bzero(buf, sizeof(buf));
+     ft_bzero(buf, sizeof(buf));
      bytes = recvfrom(e->socket, buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr*)&addr, &len);
      if ( bytes > 0 )
 	 {
@@ -104,6 +101,7 @@ int	read_packet(t_env *e)
 		 }
 		 e->nb_packet_rcv++;
 		//  write(1, buf, bytes);
+		//  write(1, "\n", 1);
      }
 
 	return (EXIT_SUCCESS);

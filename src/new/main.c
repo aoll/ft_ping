@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/07 16:58:49 by alex              #+#    #+#             */
-/*   Updated: 2018/12/10 01:30:36 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/10 03:51:37 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	loop(t_env *e)
 	struct timeval t_time;
 	time_t time_last_send = 0;
 
+	init_packet(e);
 	while (42)
 	{
 		if (gettimeofday(&t_time, NULL))
@@ -85,7 +86,7 @@ int	loop(t_env *e)
 		{
 			time_last_send = t_time.tv_sec;
 			send_packet(e);
-			e->seq++;
+			// e->seq++;
 		}
 		read_packet(e);
 		if (g_is_stop)
@@ -93,7 +94,6 @@ int	loop(t_env *e)
 			break;
 		}
 	}
-	close(e->socket);
 	printf("\n--- %s ft_ping statistics ---\n", e->adr);
 	return (EXIT_SUCCESS);
 }

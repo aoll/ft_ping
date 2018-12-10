@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/09 23:26:49 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/10 03:55:38 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,32 @@
 # include "libft.h"
 
 #define MY_TTL 255
-#define MY_DATA "abcdefghijklmnopqrstuvwx"
+#define MY_DATA "abcdefghijklmnopqrstuvwxyzabcdefghijklmn"
+#define MY_DATA_LEN 40
 
+typedef struct	s_packet
+{
+	struct icmphdr	hdr;
+	struct timeval	t_time;
+	char			data[MY_DATA_LEN];
+}	t_packet;
 
 typedef struct	s_env
 {
-	int seq;
-	int pid;
-	int nb_packet_send;
-	int nb_packet_rcv;
-	int nb_packet_error;
-	char *adr;
-	int socket;
-	struct sockaddr *ad_dst;
-	int option_v;
-	int option_t;
+	int				seq;
+	int				pid;
+	int				nb_packet_send;
+	int				nb_packet_rcv;
+	int				nb_packet_error;
+	int				socket;
+	int				 option_v;
+	int				option_t;
+	char 			*adr;
+	struct sockaddr	*ad_dst;
+	t_packet		pck;
 }	t_env;
 
+int	init_packet(t_env *e);
 int	send_packet(t_env *e);
 int	read_packet(t_env *e);
 
