@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/10 03:55:38 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 00:42:49 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@
 #include <netinet/tcp.h>
 #include <sys/time.h>
 
+#define PACKETSIZE_DATA 56
 #define PACKETSIZE	64
+#define PACKETSIZE_TOTAL 84
 
 # include "libft.h"
 
@@ -67,12 +69,21 @@ typedef struct	s_env
 	int				 option_v;
 	int				option_t;
 	char 			*adr;
+	char			ipv4[INET_ADDRSTRLEN];
+	char			*ai_canonname;
 	struct sockaddr	*ad_dst;
 	t_packet		pck;
 }	t_env;
 
-int	init_packet(t_env *e);
-int	send_packet(t_env *e);
-int	read_packet(t_env *e);
+int				init_packet(t_env *e);
+int				send_packet(t_env *e);
+int				read_packet(t_env *e);
+
+int				check_type(struct icmphdr *hdr, int bytes, t_env *e);
+int				check_data(char *data, t_env *e);
+int				check_sum(struct icmphdr *hdr2, t_env *e);
+int				check_pid(struct icmphdr *hdr2, t_env *e);
+int				check_size(int bytes, t_env *e);
+unsigned short	checksum(unsigned short *buffer, int size);
 
 #endif

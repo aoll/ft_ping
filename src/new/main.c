@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/07 16:58:49 by alex              #+#    #+#             */
-/*   Updated: 2018/12/10 03:51:37 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/10 15:09:50 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,32 @@ int	init_socket(void)
 	return (s);
 }
 
-struct sockaddr	*get_addr(const char *adr)
+struct sockaddr	*get_addr(const char *adr, t_env *e)
 {
-	struct addrinfo *res;
-	struct addrinfo  hints;  //prefered addr type(connection)
-
+	struct addrinfo	*res;
+	struct addrinfo	hints;
 
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_flags                = 0;
+	hints.ai_flags                = AI_CANONNAME;
+	// hints.ai_flags                = 0;
 	hints.ai_family               = AF_INET;
 	hints.ai_socktype             = SOCK_RAW;
 	hints.ai_protocol             = IPPROTO_ICMP;
-
 	if (getaddrinfo(adr, 0, &hints, &res) < 0)
 	{
 		printf("ft_ping: unknown host %s\n", adr);
 		exit(EXIT_FAILURE);
 	}
-	printf("%s\n", "SUCCESS");
+	e->ai_canonname = res->ai_canonname;
+	printf("cano: %s\n", e->ai_canonname);
+	if (!inet_ntop(AF_INET, &((struct sockaddr_in *)res->ai_addr)->sin_addr, e->ipv4, INET_ADDRSTRLEN))
+	{
+		printf("Error to get adress.\n");
+		exit(EXIT_FAILURE);
+	}
+	printf("ipv4: %s\n", e->ipv4);
+	// exit(0);
 	return (res->ai_addr);
-
 }
 
 
@@ -95,6 +101,9 @@ int	loop(t_env *e)
 		}
 	}
 	printf("\n--- %s ft_ping statistics ---\n", e->adr);
+	printf("%d packets transmitted, %d received, %d%s packet loss, time %dms\n",
+	e->nb_packet_send, e->nb_packet_rcv, (e->nb_packet_send - e->nb_packet_rcv) /e->nb_packet_send   *100,
+	"%", -42);
 	return (EXIT_SUCCESS);
 }
 
@@ -131,7 +140,6 @@ void	check(int ac, char **av, t_env *e)
 	}
 	if (nb_dest != 1)
 		usage();
-	return ;
 }
 
 int
@@ -153,6 +161,7 @@ main (int ac, char **av)
 	e.nb_packet_send = 0;
 	e.nb_packet_rcv = 0;
 	e.nb_packet_error = 0;
+	ft_bzero(e.ipv4, INET_ADDRSTRLEN);
 	check(ac, av, &e);
 
 
@@ -160,9 +169,10 @@ main (int ac, char **av)
 	e.socket = init_socket();
 
 
-	e.ad_dst = get_addr(e.adr);
+	e.ad_dst = get_addr(e.adr, &e);
 
 	signal(SIGINT, intHandler);//catching interrupt
+	printf("PING %s (%s) 56(84) bytes of data.\n", e.adr, "216.58.213.174");
 	loop(&e);
 
 	return (EXIT_SUCCESS);
