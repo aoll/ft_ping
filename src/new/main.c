@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/07 16:58:49 by alex              #+#    #+#             */
-/*   Updated: 2018/12/10 15:09:50 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 01:15:03 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ int	loop(t_env *e)
 	printf("%d packets transmitted, %d received, %d%s packet loss, time %dms\n",
 	e->nb_packet_send, e->nb_packet_rcv, (e->nb_packet_send - e->nb_packet_rcv) /e->nb_packet_send   *100,
 	"%", -42);
+	printf("rtt min/avg/max/mdev = %.001f/%.001f/%.001f/%.001f ms\n",
+		e->min, e->total/e->nb_packet_rcv,e->max, e->mdev);
 	return (EXIT_SUCCESS);
 }
 
@@ -161,6 +163,10 @@ main (int ac, char **av)
 	e.nb_packet_send = 0;
 	e.nb_packet_rcv = 0;
 	e.nb_packet_error = 0;
+	e.min = 0;
+	e.max = 0;
+	e.total = 0;
+	e.mdev = 0;
 	ft_bzero(e.ipv4, INET_ADDRSTRLEN);
 	check(ac, av, &e);
 

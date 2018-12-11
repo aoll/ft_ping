@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 00:42:49 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 01:07:50 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,10 @@ typedef struct	s_env
 {
 	int				seq;
 	int				pid;
+	float			min;
+	float			max;
+	float			total;
+	float			mdev;
 	int				nb_packet_send;
 	int				nb_packet_rcv;
 	int				nb_packet_error;
@@ -78,6 +82,9 @@ typedef struct	s_env
 int				init_packet(t_env *e);
 int				send_packet(t_env *e);
 int				read_packet(t_env *e);
+
+void			display(
+	struct icmphdr *hdr2, struct timeval *t_time2, struct ip *iph2, t_env *e);
 
 int				check_type(struct icmphdr *hdr, int bytes, t_env *e);
 int				check_data(char *data, t_env *e);
