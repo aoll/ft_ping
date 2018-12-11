@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/07 16:58:49 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 01:15:03 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 03:36:34 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ int	loop(t_env *e)
 	printf("%d packets transmitted, %d received, %d%s packet loss, time %dms\n",
 	e->nb_packet_send, e->nb_packet_rcv, (e->nb_packet_send - e->nb_packet_rcv) /e->nb_packet_send   *100,
 	"%", -42);
-	printf("rtt min/avg/max/mdev = %.001f/%.001f/%.001f/%.001f ms\n",
-		e->min, e->total/e->nb_packet_rcv,e->max, e->mdev);
+	printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n",
+		(e->min), (e->total/e->nb_packet_rcv),(e->max), e->mdev);
 	return (EXIT_SUCCESS);
 }
 
