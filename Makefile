@@ -6,7 +6,7 @@
 #    By: aollivie <aollivie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/14 17:07:06 by aollivie          #+#    #+#              #
-#    Updated: 2018/12/11 00:53:07 by alex             ###   ########.fr        #
+#    Updated: 2018/12/11 07:44:17 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ O_DIR= obj
 
 MKDIR = mkdir
 
-NEW_SRC = main.c packet.c check.c display.c send.c receve.c
+NEW_SRC = main.c packet.c check.c display.c send.c receve.c init.c tool.c
 # PING_SRC = create_client.c main.c get_addr.c
 
 # VPATH= .:src:src/ping

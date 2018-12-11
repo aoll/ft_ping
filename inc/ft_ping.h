@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 06:08:21 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 07:44:57 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,13 @@ typedef struct	s_env
 	t_packet		pck;
 }	t_env;
 
+void			check(int ac, char **av, t_env *e);
+
+void			init_env(int ac, char **av, t_env *e);
+void 			intHandler(int dummy);
+int				init_socket(void);
+struct sockaddr	*get_addr(const char *adr, t_env *e);
+
 int				init_packet(t_env *e);
 int				send_packet(t_env *e);
 int				read_packet(t_env *e);
@@ -98,5 +105,10 @@ int				check_sum(struct icmphdr *hdr2, t_env *e);
 int				check_pid(struct icmphdr *hdr2, t_env *e);
 int				check_size(int bytes, t_env *e);
 unsigned short	checksum(unsigned short *buffer, int size);
+
+void			display_statistics(t_env *e);
+void			display_nb_packets(t_env *e);
+void			usage(void);
+double			ft_sqrtl(double x);
 
 #endif
