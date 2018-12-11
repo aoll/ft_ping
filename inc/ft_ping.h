@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 05:59:11 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 06:08:21 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,16 @@ typedef struct	s_env
 {
 	int				seq;
 	int				pid;
-	float			min;
-	float			max;
-	float			total;
-	float			tsum;
+	double			min;
+	double			max;
+	double			total;
+	double			tsum;
 	struct timeval	start_time;
 	int				nb_packet_send;
 	int				nb_packet_rcv;
 	int				nb_packet_error;
 	int				socket;
-	int				 option_v;
+	int				option_v;
 	int				option_t;
 	char 			*adr;
 	char			ipv4[INET_ADDRSTRLEN];

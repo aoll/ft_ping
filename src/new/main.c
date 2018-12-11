@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/07 16:58:49 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 06:01:25 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 06:56:53 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void intHandler(int dummy)
 	g_is_stop = 1;
 }
 
-float					ft_sqrtl(float x)
+double					ft_sqrtl(double x)
 {
-	float n;
+	double n;
 
 	n = x / 2;
 	while (ABS(n * n - x) > TOLERANCE)
@@ -76,6 +76,9 @@ void	usage(void)
 
 static void	display_nb_packets(t_env *e)
 {
+	struct timeval	t_time;
+
+	gettimeofday(&t_time, NULL);
 	printf("%d packets transmitted, ", e->nb_packet_send);
 	printf("%d received, ", e->nb_packet_rcv);
 	if (e->nb_packet_error)
@@ -83,7 +86,8 @@ static void	display_nb_packets(t_env *e)
 	printf("%d%s packet loss, ",
 	e->nb_packet_rcv != e->nb_packet_send ?
 		e->nb_packet_rcv / e->nb_packet_send * 100 : 0, "%");
-	printf("time %dms\n", e->nb_packet_error);
+	printf("time %.0fms\n", (float)((1000000*t_time.tv_sec + t_time.tv_usec)
+		- (1000000*(e->start_time.tv_sec) + e->start_time.tv_usec))/ 1000);
 	return ;
 }
 

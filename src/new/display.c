@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 00:49:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 04:52:34 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 06:52:59 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void		print_by_unit(int time_echo)
 {
-	float tf = time_echo * 0.1;
+	double tf = time_echo * 0.1;
 	int t = time_echo / 10;
-	float f = t * 1.0;
+	double f = t * 1.0;
 
 	if (f != tf)
 	{
@@ -31,9 +31,9 @@ static void		print_by_unit(int time_echo)
 void			display(
 	struct icmphdr *hdr2, struct timeval *t_time2, struct ip *iph2, t_env *e)
 {
-	struct timeval	t_time;
 	int				time_echo;
-	float			time_echo_u;
+	double			time_echo_u;
+	struct timeval	t_time;
 
 	gettimeofday(&t_time, NULL);
 	time_echo = ((1000000*t_time.tv_sec + t_time.tv_usec)
