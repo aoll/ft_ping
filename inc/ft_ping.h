@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 07:44:57 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 09:23:43 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 
 # include "libft.h"
 
-#define MY_TTL 255
+#define MY_TTL 1
 #define MY_DATA "abcdefghijklmnopqrstuvwxyzabcdefghijklmn"
 #define MY_DATA_LEN 40
 

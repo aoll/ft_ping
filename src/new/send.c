@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 00:50:20 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 00:50:43 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 09:15:27 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	send_packet(t_env *e)
 		  (struct sockaddr *)e->ad_dst, sizeof(struct sockaddr));
 	if (sent_bytes != PACKETSIZE)
 	{
-		printf("sent_bytes: %zd\n", sent_bytes);
 		printf("%s\n", "ft_ping: sendto: Network is unreachable");
 	}
 	e->nb_packet_send++;
