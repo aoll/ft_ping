@@ -6,24 +6,28 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/07 16:58:49 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 03:36:34 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 06:01:25 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-
-
-
-int g_is_stop = 0;
-
 void intHandler(int dummy)
 {
-	// printf("%s\n", "intHandler");
 	g_is_stop = 1;
 }
 
+float					ft_sqrtl(float x)
+{
+	float n;
 
+	n = x / 2;
+	while (ABS(n * n - x) > TOLERANCE)
+	{
+		n = (n + x / n) / 2;
+	}
+	return n;
+}
 
 int	init_socket(void)
 {
@@ -44,8 +48,7 @@ struct sockaddr	*get_addr(const char *adr, t_env *e)
 	struct addrinfo	hints;
 
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_flags                = AI_CANONNAME;
-	// hints.ai_flags                = 0;
+	hints.ai_flags                = 0;
 	hints.ai_family               = AF_INET;
 	hints.ai_socktype             = SOCK_RAW;
 	hints.ai_protocol             = IPPROTO_ICMP;
@@ -54,15 +57,12 @@ struct sockaddr	*get_addr(const char *adr, t_env *e)
 		printf("ft_ping: unknown host %s\n", adr);
 		exit(EXIT_FAILURE);
 	}
-	e->ai_canonname = res->ai_canonname;
-	printf("cano: %s\n", e->ai_canonname);
-	if (!inet_ntop(AF_INET, &((struct sockaddr_in *)res->ai_addr)->sin_addr, e->ipv4, INET_ADDRSTRLEN))
+	if (!inet_ntop(AF_INET, &((struct sockaddr_in *)res->ai_addr)->sin_addr,
+		e->ipv4, INET_ADDRSTRLEN))
 	{
 		printf("Error to get adress.\n");
 		exit(EXIT_FAILURE);
 	}
-	printf("ipv4: %s\n", e->ipv4);
-	// exit(0);
 	return (res->ai_addr);
 }
 
@@ -74,74 +74,101 @@ void	usage(void)
 	return ;
 }
 
+static void	display_nb_packets(t_env *e)
+{
+	printf("%d packets transmitted, ", e->nb_packet_send);
+	printf("%d received, ", e->nb_packet_rcv);
+	if (e->nb_packet_error)
+		printf("+%d errors, ", e->nb_packet_error);
+	printf("%d%s packet loss, ",
+	e->nb_packet_rcv != e->nb_packet_send ?
+		e->nb_packet_rcv / e->nb_packet_send * 100 : 0, "%");
+	printf("time %dms\n", e->nb_packet_error);
+	return ;
+}
+
+static void		display_statistics(t_env *e)
+{
+	printf("\n--- %s ft_ping statistics ---\n", e->adr);
+	display_nb_packets(e);
+	printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n",
+		(e->min), (e->total/e->nb_packet_rcv),(e->max),
+		ft_sqrtl((e->tsum/(e->nb_packet_rcv + e->nb_packet_send)) -
+		(e->total/(e->nb_packet_rcv + e->nb_packet_send)) *
+		(e->total/(e->nb_packet_rcv + e->nb_packet_send))));
+	return ;
+}
+
 int	loop(t_env *e)
 {
-	// int sequenceno = 1;
 	struct timeval t_time;
-	time_t time_last_send = 0;
+	time_t time_last_send;
 
+	time_last_send = 0;
 	init_packet(e);
 	while (42)
 	{
-		if (gettimeofday(&t_time, NULL))
-		{
-			printf("%s\n", "ERROR: gettimeofday" );
-			exit (EXIT_FAILURE);
-		}
+		gettimeofday(&t_time, NULL);
 		if (t_time.tv_sec >= time_last_send + 1)
 		{
 			time_last_send = t_time.tv_sec;
 			send_packet(e);
-			// e->seq++;
 		}
 		read_packet(e);
 		if (g_is_stop)
-		{
 			break;
-		}
 	}
-	printf("\n--- %s ft_ping statistics ---\n", e->adr);
-	printf("%d packets transmitted, %d received, %d%s packet loss, time %dms\n",
-	e->nb_packet_send, e->nb_packet_rcv, (e->nb_packet_send - e->nb_packet_rcv) /e->nb_packet_send   *100,
-	"%", -42);
-	printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n",
-		(e->min), (e->total/e->nb_packet_rcv),(e->max), e->mdev);
+	display_statistics(e);
 	return (EXIT_SUCCESS);
 }
 
 void	check(int ac, char **av, t_env *e)
 {
-	int i = 1;
+	int i;
 	int j;
-	int nb_dest = 0;
+	int nb_dest;
 
-	if (ac < 2)
-		usage();
-	while (i < ac)
-	{
+	i = 0;
+	nb_dest = 0;
+	while (++i < ac)
 		if (av[i][0] == '-')
 		{
 			if (!av[i][1])
 				usage();
-			j = 1;
-			while (av[i][j])
-			{
+			j = 0;
+			while (av[i][++j])
 				if (av[i][j] == 'h')
 					usage();
 				else if (av[i][j] == 'v')
 					e->option_v = 1;
-				j++;
-			}
 		}
 		else
 		{
 			e->adr = av[i];
 			nb_dest++;
 		}
-		i++;
-	}
-	if (nb_dest != 1)
+	if (ac < 2 || nb_dest != 1)
 		usage();
+}
+
+void	init_env(int ac, char **av, t_env *e)
+{
+	gettimeofday(&e->start_time, NULL);
+	e->pid = getpid();
+	e->seq = 1;
+	e->option_t = 0;
+	e->option_v = 0;
+	e->nb_packet_send = 0;
+	e->nb_packet_rcv = 0;
+	e->nb_packet_error = 0;
+	e->min = 0;
+	e->max = 0;
+	e->total = 0;
+	ft_bzero(e->ipv4, INET_ADDRSTRLEN);
+	check(ac, av, e);
+	e->socket = init_socket();
+	e->ad_dst = get_addr(e->adr, e);
+	return ;
 }
 
 int
@@ -155,31 +182,9 @@ main (int ac, char **av)
 		printf("%s\n", "Must be root.");
 		return (EXIT_FAILURE);
 	}
-
-	e.pid = getpid();
-	e.seq = 1;
-	e.option_t = 0;
-	e.option_v = 0;
-	e.nb_packet_send = 0;
-	e.nb_packet_rcv = 0;
-	e.nb_packet_error = 0;
-	e.min = 0;
-	e.max = 0;
-	e.total = 0;
-	e.mdev = 0;
-	ft_bzero(e.ipv4, INET_ADDRSTRLEN);
-	check(ac, av, &e);
-
-
-
-	e.socket = init_socket();
-
-
-	e.ad_dst = get_addr(e.adr, &e);
-
-	signal(SIGINT, intHandler);//catching interrupt
-	printf("PING %s (%s) 56(84) bytes of data.\n", e.adr, "216.58.213.174");
-	loop(&e);
-
-	return (EXIT_SUCCESS);
+	g_is_stop = 0;
+	init_env(ac, av, &e);
+	signal(SIGINT, intHandler);
+	printf("PING %s (%s) 56(84) bytes of data.\n", e.adr, e.ipv4);
+	return (loop(&e));
 }

@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 01:07:50 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/11 05:59:11 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@
 #define MY_DATA "abcdefghijklmnopqrstuvwxyzabcdefghijklmn"
 #define MY_DATA_LEN 40
 
+#define ABS(x) ((x) < 0 ? -(x) : (x))
+#define TOLERANCE		1000
+
+int g_is_stop;
+
 typedef struct	s_packet
 {
 	struct icmphdr	hdr;
@@ -65,7 +70,8 @@ typedef struct	s_env
 	float			min;
 	float			max;
 	float			total;
-	float			mdev;
+	float			tsum;
+	struct timeval	start_time;
 	int				nb_packet_send;
 	int				nb_packet_rcv;
 	int				nb_packet_error;
