@@ -12,7 +12,7 @@
 
 #include "ft_ping.h"
 
-double					ft_sqrtl(double x)
+double	ft_sqrtl(double x)
 {
 	double n;
 
@@ -21,7 +21,7 @@ double					ft_sqrtl(double x)
 	{
 		n = (n + x / n) / 2;
 	}
-	return n;
+	return (n);
 }
 
 void	usage(void)
@@ -42,9 +42,10 @@ void	display_nb_packets(t_env *e)
 		printf("+%d errors, ", e->nb_packet_error);
 	printf("%d%s packet loss, ",
 	(e->nb_packet_rcv != e->nb_packet_send ?
-		((e->nb_packet_send - e->nb_packet_rcv) / e->nb_packet_send * 100) : 0), "%");
-	printf("time %.0fms\n", (float)((1000000*t_time.tv_sec + t_time.tv_usec)
-		- (1000000*(e->start_time.tv_sec) + e->start_time.tv_usec))/ 1000);
+		((e->nb_packet_send - e->nb_packet_rcv) / e->nb_packet_send * 100) : 0),
+		"%");
+	printf("time %.0fms\n", (float)((1000000 * t_time.tv_sec + t_time.tv_usec)
+		- (1000000 * (e->start_time.tv_sec) + e->start_time.tv_usec)) / 1000);
 	return ;
 }
 
@@ -58,9 +59,9 @@ void	display_statistics(t_env *e)
 		return ;
 	}
 	printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n",
-		(e->min), (e->total/e->nb_packet_rcv),(e->max),
-		ft_sqrtl((e->tsum/(e->nb_packet_rcv + e->nb_packet_send)) -
-		(e->total/(e->nb_packet_rcv + e->nb_packet_send)) *
-		(e->total/(e->nb_packet_rcv + e->nb_packet_send))));
+		(e->min), (e->total / e->nb_packet_rcv), (e->max),
+		ft_sqrtl((e->tsum / (e->nb_packet_rcv + e->nb_packet_send)) -
+		(e->total / (e->nb_packet_rcv + e->nb_packet_send)) *
+		(e->total / (e->nb_packet_rcv + e->nb_packet_send))));
 	return ;
 }

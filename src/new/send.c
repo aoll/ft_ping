@@ -21,7 +21,7 @@ int	send_packet(t_env *e)
 	e->pck.hdr.checksum = 0;
 	e->pck.hdr.checksum = checksum((unsigned short *)&e->pck, PACKETSIZE);
 	sent_bytes = sendto(e->socket, &e->pck.hdr, PACKETSIZE, 0,
-		  (struct sockaddr *)e->ad_dst, sizeof(struct sockaddr));
+		(struct sockaddr *)e->ad_dst, sizeof(struct sockaddr));
 	if (sent_bytes != PACKETSIZE)
 	{
 		printf("%s\n", "ft_ping: sendto: Network is unreachable");

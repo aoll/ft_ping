@@ -14,10 +14,13 @@
 
 static void		print_by_unit(int time_echo)
 {
-	double tf = time_echo * 0.1;
-	int t = time_echo / 10;
-	double f = t * 1.0;
+	double	tf;
+	int		t;
+	double	f;
 
+	tf = time_echo * 0.1;
+	t = time_echo / 10;
+	f = t * 1.0;
 	if (f != tf)
 	{
 		printf(" time=%0.1f ms\n", tf);
@@ -36,17 +39,17 @@ void			display(
 	struct timeval	t_time;
 
 	gettimeofday(&t_time, NULL);
-	time_echo = ((1000000*t_time.tv_sec + t_time.tv_usec)
-		- (1000000*(t_time2->tv_sec) + t_time2->tv_usec))/ 100 ;
-	time_echo_u = ((1000000*t_time.tv_sec + t_time.tv_usec)
-		- (1000000*(t_time2->tv_sec) + t_time2->tv_usec));
+	time_echo = ((1000000 * t_time.tv_sec + t_time.tv_usec)
+		- (1000000 * (t_time2->tv_sec) + t_time2->tv_usec)) / 100;
+	time_echo_u = ((1000000 * t_time.tv_sec + t_time.tv_usec)
+		- (1000000 * (t_time2->tv_sec) + t_time2->tv_usec));
 	printf("%lu bytes from %s: icmp_seq=%d ttl=%d", PACKETSIZE_TOTAL -
 		sizeof(struct ip), e->ipv4, hdr2->un.echo.sequence, iph2->ip_ttl);
 	print_by_unit(time_echo);
 	time_echo_u /= 1000;
 	e->total += time_echo_u;
 	e->tsum += time_echo_u * time_echo_u;
-	e->min = e->min == 0 || time_echo_u  < e->min ? time_echo_u : e->min;
-	e->max = time_echo_u  > e->max ? time_echo_u  : e->max;
+	e->min = e->min == 0 || time_echo_u < e->min ? time_echo_u : e->min;
+	e->max = time_echo_u > e->max ? time_echo_u : e->max;
 	return ;
 }

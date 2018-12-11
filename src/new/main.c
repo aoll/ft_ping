@@ -12,10 +12,10 @@
 
 #include "ft_ping.h"
 
-int	loop(t_env *e)
+int			loop(t_env *e)
 {
-	struct timeval t_time;
-	time_t time_last_send;
+	struct timeval	t_time;
+	time_t			time_last_send;
 
 	time_last_send = 0;
 	init_packet(e);
@@ -29,13 +29,13 @@ int	loop(t_env *e)
 		}
 		read_packet(e);
 		if (g_is_stop)
-			break;
+			break ;
 	}
 	display_statistics(e);
 	return (EXIT_SUCCESS);
 }
 
-void	check(int ac, char **av, t_env *e)
+void		check(int ac, char **av, t_env *e)
 {
 	int i;
 	int j;
@@ -64,11 +64,10 @@ void	check(int ac, char **av, t_env *e)
 		usage();
 }
 
-int
-main (int ac, char **av)
+int			main(int ac, char **av)
 {
-	struct sockaddr *ad_dst;
-	t_env e;
+	struct sockaddr	*ad_dst;
+	t_env			e;
 
 	if (getuid())
 	{
@@ -77,7 +76,7 @@ main (int ac, char **av)
 	}
 	g_is_stop = 0;
 	init_env(ac, av, &e);
-	signal(SIGINT, intHandler);
+	signal(SIGINT, int_handler);
 	printf("PING %s (%s) 56(84) bytes of data.\n", e.adr, e.ipv4);
 	return (loop(&e));
 }

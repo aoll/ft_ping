@@ -12,34 +12,36 @@
 
 #include "ft_ping.h"
 
-void 			intHandler(int dummy)
+void				int_handler(int sig)
 {
 	g_is_stop = 1;
 }
 
-int				init_socket(void)
+int					init_socket(void)
 {
-	int s = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);	/* open raw socket */
+	int			s;
+	const int	val;
 
-	const int val=MY_TTL;
-	if ( setsockopt(s, SOL_IP, IP_TTL, &val, sizeof(val)) != 0) {
+	val = MY_TTL;
+	s = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);
+	if (setsockopt(s, SOL_IP, IP_TTL, &val, sizeof(val)) != 0)
+	{
 		printf("%s\n", "ERROR");
 		exit(EXIT_FAILURE);
 	}
-
 	return (s);
 }
 
-struct sockaddr	*get_addr(const char *adr, t_env *e)
+struct sockaddr		*get_addr(const char *adr, t_env *e)
 {
 	struct addrinfo	*res;
 	struct addrinfo	hints;
 
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_flags                = 0;
-	hints.ai_family               = AF_INET;
-	hints.ai_socktype             = SOCK_RAW;
-	hints.ai_protocol             = IPPROTO_ICMP;
+	hints.ai_flags = 0;
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_RAW;
+	hints.ai_protocol = IPPROTO_ICMP;
 	if (getaddrinfo(adr, 0, &hints, &res) < 0)
 	{
 		printf("ft_ping: unknown host %s\n", adr);
@@ -54,8 +56,7 @@ struct sockaddr	*get_addr(const char *adr, t_env *e)
 	return (res->ai_addr);
 }
 
-
-void			init_env(int ac, char **av, t_env *e)
+void				init_env(int ac, char **av, t_env *e)
 {
 	gettimeofday(&e->start_time, NULL);
 	e->pid = getpid();
