@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 09:23:43 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/12 23:15:56 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct	s_packet
 
 typedef struct	s_env
 {
-	struct addrinfo	*res
+	struct addrinfo	*res;
 	int				seq;
 	int				pid;
 	double			min;

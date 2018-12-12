@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 07:40:10 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 07:42:25 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/12 23:17:01 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ struct sockaddr		*get_addr(const char *adr, t_env *e)
 		printf("ft_ping: unknown host %s\n", adr);
 		exit(EXIT_FAILURE);
 	}
-	if (!inet_ntop(AF_INET, &((struct sockaddr_in *)&e->res->ai_addr)->sin_addr,
+	if (!inet_ntop(AF_INET, &((struct sockaddr_in *)e->res->ai_addr)->sin_addr,
 		e->ipv4, INET_ADDRSTRLEN))
 	{
 		printf("Error to get adress.\n");
 		exit(EXIT_FAILURE);
 	}
-	return (&e->res->ai_addr);
+	return (e->res->ai_addr);
 }
 
 void				init_env(int ac, char **av, t_env *e)

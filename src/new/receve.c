@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 00:51:09 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 00:51:44 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/12 23:21:54 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ int						read_packet(t_env *e)
 {
 	struct msghdr	msg;
 	struct iovec	iov;
-	char			iov_base[PACKETSIZE];
+	unsigned char	iov_base[PACKETSIZE_TOTAL];
 	ssize_t			ret;
 
-	msg.msg_name = e->res.ai_addr;
-	msg.msg_namelen = e->res.ai_addrlen;
+	msg.msg_name = e->res->ai_addr;
+	msg.msg_namelen = e->res->ai_addrlen;
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1;
 	iov.iov_base = &iov_base;
-	iov.iov_len = PACKETSIZE;
+	iov.iov_len = PACKETSIZE_TOTAL;
 
 	ret = recvmsg(e->socket, &msg, MSG_DONTWAIT);
 
