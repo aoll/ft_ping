@@ -19,10 +19,10 @@ void				int_handler(int sig)
 
 int					init_socket(void)
 {
-	int	s;
-	int	val ;
+	int			s;
+	const int	val = MY_TTL;
 
-	val = MY_TTL;
+	//val = MY_TTL;
 	s = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if (setsockopt(s, SOL_IP, IP_TTL, &val, sizeof(val)) != 0)
 	{

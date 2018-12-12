@@ -33,7 +33,7 @@ static int	process_packet(unsigned char buf[], int bytes, t_env *e)
 	return (EXIT_SUCCESS);
 }
 
-int						recv_packet(t_env *e)
+int						read_packet(t_env *e)
 {
 	struct msghdr	msg;
 	struct iovec	iov;
@@ -60,21 +60,21 @@ int						recv_packet(t_env *e)
 	//
 	// return (validate_msg(iov_base, ret));
 }
-
-int			read_packet(t_env *e)
-{
-	unsigned char		buf[1024];
-	struct sockaddr_in	addr;
-	int					bytes;
-	unsigned int		len;
-
-	len = sizeof(struct sockaddr_in);
-	ft_bzero(buf, sizeof(buf));
-	bytes = recvfrom(e->socket, buf, sizeof(buf), MSG_DONTWAIT,
-		(struct sockaddr*)&addr, &len);
-	if (bytes > 0)
-	{
-		return (process_packet(buf, bytes, e));
-	}
-	return (EXIT_SUCCESS);
-}
+//
+// int			read_packet(t_env *e)
+// {
+// 	unsigned char		buf[1024];
+// 	struct sockaddr_in	addr;
+// 	int					bytes;
+// 	unsigned int		len;
+//
+// 	len = sizeof(struct sockaddr_in);
+// 	ft_bzero(buf, sizeof(buf));
+// 	bytes = recvfrom(e->socket, buf, sizeof(buf), MSG_DONTWAIT,
+// 		(struct sockaddr*)&addr, &len);
+// 	if (bytes > 0)
+// 	{
+// 		return (process_packet(buf, bytes, e));
+// 	}
+// 	return (EXIT_SUCCESS);
+// }
