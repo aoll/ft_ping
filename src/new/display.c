@@ -6,7 +6,7 @@
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/11 00:49:02 by alex              #+#    #+#             */
-/*   Updated: 2018/12/11 06:52:59 by alex             ###   ########.fr       */
+/*   Updated: 2018/12/12 23:43:42 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,11 @@ void			display(
 		- (1000000 * (t_time2->tv_sec) + t_time2->tv_usec)) / 100;
 	time_echo_u = ((1000000 * t_time.tv_sec + t_time.tv_usec)
 		- (1000000 * (t_time2->tv_sec) + t_time2->tv_usec));
+	if (!time_echo || !time_echo_u)
+	{
+		printf("ft_ping: sendto: Network is unreachable\n");
+		return ;
+	}
 	printf("%lu bytes from %s: icmp_seq=%d ttl=%u", PACKETSIZE_TOTAL -
 		sizeof(struct ip), e->ipv4, hdr2->un.echo.sequence, iph2->ip_ttl);
 	print_by_unit(time_echo);
