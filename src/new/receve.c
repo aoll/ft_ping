@@ -33,6 +33,30 @@ static int	process_packet(unsigned char buf[], int bytes, t_env *e)
 	return (EXIT_SUCCESS);
 }
 
+/*
+int recv_packet(t_env *e)
+{
+  struct msghdrmsg msg;
+  struct ioveciov iov;
+  char iov_base[64];
+  ssize_t ret;
+
+  msg.msg_name = e->ad_dst;
+  msg.msg_namelen = e->ad_dst->ai_addrlen;
+  msg.msg_iov = &iov;
+  msg.msg_iovlen = 1;
+  iov.iov_base = &iov_base;
+  iov.iov_len = 64;
+
+  ret = recvmsg(e->socket, &msg, MSG_DONTWAIT);
+  if (ret< 0)
+    return (1);  // nothing to recv
+
+  return (process_packet(iov_base, bytes, e));
+}
+*/
+
+
 int			read_packet(t_env *e)
 {
 	unsigned char		buf[1024];

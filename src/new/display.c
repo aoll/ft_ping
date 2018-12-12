@@ -43,7 +43,7 @@ void			display(
 		- (1000000 * (t_time2->tv_sec) + t_time2->tv_usec)) / 100;
 	time_echo_u = ((1000000 * t_time.tv_sec + t_time.tv_usec)
 		- (1000000 * (t_time2->tv_sec) + t_time2->tv_usec));
-	printf("%lu bytes from %s: icmp_seq=%d ttl=%d", PACKETSIZE_TOTAL -
+	printf("%lu bytes from %s: icmp_seq=%d ttl=%u", PACKETSIZE_TOTAL -
 		sizeof(struct ip), e->ipv4, hdr2->un.echo.sequence, iph2->ip_ttl);
 	print_by_unit(time_echo);
 	time_echo_u /= 1000;
