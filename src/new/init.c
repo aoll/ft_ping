@@ -19,8 +19,8 @@ void				int_handler(int sig)
 
 int					init_socket(void)
 {
-	int			s;
-	const int	val;
+	int	s;
+	int	val ;
 
 	val = MY_TTL;
 	s = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);
@@ -34,7 +34,6 @@ int					init_socket(void)
 
 struct sockaddr		*get_addr(const char *adr, t_env *e)
 {
-	struct addrinfo	*res;
 	struct addrinfo	hints;
 
 	memset(&hints, 0, sizeof(hints));
@@ -42,18 +41,18 @@ struct sockaddr		*get_addr(const char *adr, t_env *e)
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_RAW;
 	hints.ai_protocol = IPPROTO_ICMP;
-	if (getaddrinfo(adr, 0, &hints, &res) < 0)
+	if (getaddrinfo(adr, 0, &hints, &e->res) < 0)
 	{
 		printf("ft_ping: unknown host %s\n", adr);
 		exit(EXIT_FAILURE);
 	}
-	if (!inet_ntop(AF_INET, &((struct sockaddr_in *)res->ai_addr)->sin_addr,
+	if (!inet_ntop(AF_INET, &((struct sockaddr_in *)&e->res->ai_addr)->sin_addr,
 		e->ipv4, INET_ADDRSTRLEN))
 	{
 		printf("Error to get adress.\n");
 		exit(EXIT_FAILURE);
 	}
-	return (res->ai_addr);
+	return (&e->res->ai_addr);
 }
 
 void				init_env(int ac, char **av, t_env *e)

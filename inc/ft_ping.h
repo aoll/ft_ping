@@ -35,7 +35,7 @@
 # define PACKETSIZE_DATA 56
 # define PACKETSIZE	64
 # define PACKETSIZE_TOTAL 84
-# define MY_TTL 1
+# define MY_TTL 255
 # define MY_DATA "abcdefghijklmnopqrstuvwxyzabcdefghijklmn"
 # define MY_DATA_LEN 40
 # define ABS(x) ((x) < 0 ? -(x) : (x))
@@ -52,6 +52,7 @@ typedef struct	s_packet
 
 typedef struct	s_env
 {
+	struct addrinfo	*res
 	int				seq;
 	int				pid;
 	double			min;
