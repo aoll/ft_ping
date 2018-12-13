@@ -21,31 +21,24 @@ int					init_socket(const char *adr)
 {
 	int			s;
 	const int	val = MY_TTL;
-
-
 	struct addrinfo hints;
 	struct addrinfo *result;
 
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_family = AF_UNSPEC;
+	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_RAW;
 	hints.ai_protocol = IPPROTO_ICMP;
-
 	if (getaddrinfo(adr, 0, &hints, &result) < 0)
 	{
-	  printf("ok");
 		printf("ft_ping: unknown host %s\n", adr);
 		exit(EXIT_FAILURE);
 	}
-
-
 	s = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 	if (s == -1)
 	{
 	  printf("ft_ping: socket: unknown host %s\n", adr);
 	  exit(EXIT_FAILURE);
 	}
-	// s = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if (setsockopt(s, IPPROTO_IP, IP_TTL, &val, sizeof(val)) != 0)
 	{
 		printf("%s\n", "ERROR");
@@ -60,12 +53,11 @@ struct sockaddr		*get_addr(const char *adr, t_env *e)
 
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_flags = 0;
-	hints.ai_family = AF_UNSPEC;
+	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_RAW;
 	hints.ai_protocol = IPPROTO_ICMP;
 	if (getaddrinfo(adr, 0, &hints, &e->res) < 0)
 	{
-	  printf("not ok");
 		printf("ft_ping: unknown host %s\n", adr);
 		exit(EXIT_FAILURE);
 	}

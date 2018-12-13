@@ -1,4 +1,4 @@
-docker-machine create --driver virtualbox FtPingMachine;
+#docker-machine create --driver virtualbox FtPingMachine;
 eval $(docker-machine env FtPingMachine);
 docker build -t ping-build .;
 docker stop ping-run;

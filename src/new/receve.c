@@ -52,34 +52,7 @@ int						read_packet(t_env *e)
 
 	if (ret > 0)
 	{
-	  printf("%d\n", ret);
-	  printf("ip ttl%d \n", ((struct ip *)iov_base)->ip_ttl);
-	  	  printf("ip ttl%d \n", ((struct iphdr *)iov_base)->ttl);
-	  write(1, iov_base, ret);
 		return (process_packet(iov_base, ret, e));
 	}
 	return (EXIT_SUCCESS);
-
-	// if (ret	< 0)
-	// 	return (1);
-	//
-	// return (validate_msg(iov_base, ret));
 }
-//
-// int			read_packet(t_env *e)
-// {
-// 	unsigned char		buf[1024];
-// 	struct sockaddr_in	addr;
-// 	int					bytes;
-// 	unsigned int		len;
-//
-// 	len = sizeof(struct sockaddr_in);
-// 	ft_bzero(buf, sizeof(buf));
-// 	bytes = recvfrom(e->socket, buf, sizeof(buf), MSG_DONTWAIT,
-// 		(struct sockaddr*)&addr, &len);
-// 	if (bytes > 0)
-// 	{
-// 		return (process_packet(buf, bytes, e));
-// 	}
-// 	return (EXIT_SUCCESS);
-// }
