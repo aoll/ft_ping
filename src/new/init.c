@@ -22,8 +22,23 @@ int					init_socket(void)
 	int			s;
 	const int	val = MY_TTL;
 
-	//val = MY_TTL;
-	s = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);
+
+	struct addrinfo hints;
+	struct addrinfo *result;
+
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_RAW;
+	hints.ai_protocol = IPPROTO_ICMP;
+
+	if (getaddrinfo(g_env.opt.host, NULL, &hints, &result))
+	{
+		printf("ft_ping: unknown host %s\n", adr);
+		exit(EXIT_FAILURE);
+	}
+
+
+	s = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+	// s = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if (setsockopt(s, IPPROTO_IP, IP_TTL, &val, sizeof(val)) != 0)
 	{
 		printf("%s\n", "ERROR");
