@@ -17,7 +17,7 @@ void				int_handler(int sig)
 	g_is_stop = 1;
 }
 
-int					init_socket(void)
+int					init_socket(const char *adr)
 {
 	int			s;
 	const int	val = MY_TTL;
@@ -30,7 +30,7 @@ int					init_socket(void)
 	hints.ai_socktype = SOCK_RAW;
 	hints.ai_protocol = IPPROTO_ICMP;
 
-	if (getaddrinfo(g_env.opt.host, NULL, &hints, &result))
+	if (getaddrinfo(adr, NULL, &hints, &result))
 	{
 		printf("ft_ping: unknown host %s\n", adr);
 		exit(EXIT_FAILURE);
@@ -85,7 +85,7 @@ void				init_env(int ac, char **av, t_env *e)
 	e->total = 0;
 	ft_bzero(e->ipv4, INET_ADDRSTRLEN);
 	check(ac, av, e);
-	e->socket = init_socket();
+	e->socket = init_socket(e->adr);
 	e->ad_dst = get_addr(e->adr, e);
 	return ;
 }
