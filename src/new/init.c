@@ -24,7 +24,7 @@ int					init_socket(void)
 
 	//val = MY_TTL;
 	s = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);
-	if (setsockopt(s, SOL_IP, IP_TTL, &val, sizeof(val)) != 0)
+	if (setsockopt(s, IPPROTO_IP, IP_TTL, &val, sizeof(val)) != 0)
 	{
 		printf("%s\n", "ERROR");
 		exit(EXIT_FAILURE);
