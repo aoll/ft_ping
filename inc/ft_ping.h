@@ -76,7 +76,7 @@ typedef struct	s_env
 void			check(int ac, char **av, t_env *e);
 void			init_env(int ac, char **av, t_env *e);
 void			int_handler(int sig);
-int				init_socket(void);
+int				init_socket(const char *adr);
 struct sockaddr	*get_addr(const char *adr, t_env *e);
 int				init_packet(t_env *e);
 int				send_packet(t_env *e);
